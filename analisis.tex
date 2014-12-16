@@ -1,0 +1,217 @@
+\chapter{Análisis de los eventos}
+\label{sec:analysis}
+
+Pythia es un programa escrito en el lenguaje \verb|C++| para la simulación de eventos en colisionadores hadrónicos, usando métodos de Monte Carlo. En este contexto, un evento es una serie de partículas que describen una colisión y su evolución completa, empezando por los haces entrantes hasta los estados finales de hadrones y leptones.
+
+El error estadístico de una cantidad está relacionado con las fluctuaciones de los valores obtenidos en una medición (en nuestro caso, una simulación). Este error es inherente a el carácter aleatorio de los mecanismos que están detrás de esta simulación (es decir, el uso de números pseudo-aleatorios en una simulación puede producir resultados diferentes para realizaciones diferentes).
+
+Otra fuente de incertidumbre es el error sistemático. En una medición experimental, problemas como la precisión limitada de los instrumentos, el conocimiento limitado que tenemos de los detectores, el proceso de selección de las señales y la calibración del aparataje usado introducen un error que puede ser cuantificado y usualmente mejorado.
+
+En una simulación de Monte Carlo, el error estadístico de una cantidad $I$ es
+$$
+\delta I = \frac{\sigma (I)}{\sqrt {N_\mrm{acc}}},
+$$
+donde $\sigma(I)$ es la desviación estándar de la cantidad, dado por la función de probabilidad en el espacio de muestreo. $N_\mrm{acc}$ es el número de eventos aceptados, es decir, el número de eventos muestreados que contribuyen a la cantidad a estudiar. (Algunos eventos generados pueden no ser del carácter deseado y por consiguiente son descartados para el estudio.) Esta es la razón por la cual usualmente se hacen simulaciones con una gran cantidad de eventos.
+
+El récord del evento es un vector que almacena las partículas en el evento. Cada vez que una partícula es añadida al récord, un número \verb|index| (de índice) es asignado a esta como una referencia. Las partículas en el proceso duro toman los primeros lugares en el récord, que son usualmente seis o siete (2 partículas provenientes de los haces inicialea, más el proceso de 2(partones)$\to$2 y una partícula de resonancia si la hubiere). Además, el proceso duro está listado separadamente.
+
+Cada partícula es creada con un conjunto de propiedades, la salida estándar de eventos de \textsc{Pythia} muestra las siguientes:
+
+\begin{itemize}
+\item El número de identidad (\verb|id|) de la partícula, siguiendo el Esquema de Numeración de Partículas de Monte Carlo\cite{Beringer:1900zz}. Este número refiere a las propiedades fijas inherentes a la partícula, como el nombre (\verb|name|) de la partícula (también mostrado), el ancho de la probabilidad de decaimiento, etc.
+
+\item El número de status (\verb|status number|). Este número positivo indica el mecanismo por el cual la partícula es añadida al récord del evento. Cuando la partícula decae el estatus cambia a negativo. Entonces, solo las particulas finales tendrán un número de estatus positivo.
+
+\item Los números de índice de las partículas madres (\verb|mothers|) y las hijas (\verb|daughters|).
+
+\item Los índices de color de las partículas, siguiendo el esquema de Les Houches Accord para el flujo de color \cite{Boos:2001cv}.
+
+\item El cuadrimomentum (\verb|px, py, pz, e|) y masa (\verb|m|).
+\end{itemize}
+
+Con esta información se pueden estudiar diferentes aspectos de la colisión simulada. Dado un conjunto de eventos, el programa puede producir estadísticas de la sección eficaz del proceso duro, entre otras cantidades. Además, implementando diferentes métodos, es posible extraer información acerca de las partículas para estudiar detalles más específicos de las colisiones.
+
+En este trabajo, se simularán tanto colisiones leptónicas ($\e^+\e^-$) como hadrónicas ($\p\p$). El primer caso es más fácil de tratar ya que los haces que colisionan están hechos de leptones (en lugar de los hadrones, que son compuestos) y no interactúan a través de la fuerza fuerte.
+
+
+\section{Colisiones electrón-positrón}
+
+
+Una manera limpia de producir bosones $Z^0$ es haciendo chocar dos electrones a una energía en el centro de momentum muy cerca a la masa del bosón, es decir, a 91,2 GeV. Se conoce como resonancia al proceso en el que la energía coincide la masa de la partícula creada. Para estudiar la resonancia del bosón $Z^0$ hace un par de décadas dos colisionadores (SLC y LEP) se construyeron para hacer chocar haces de electrones y positrones a energías cercanas a 45 GeV cada uno.
+
+El decaimiento hadrónico del $Z^0$ es el más probable\cite{Beringer:1900zz}; allí, un par quark-antiquark es creado en el proceso duro y la FSR comprende emisión de gluones y la posible creación de quarks pesados. El decaimiento leptónico no es considerado en este caso, ya que estamos interesados en quarks pesados.
+
+Los quarks provenientes de un gluón (o fotón) que decae, serán llamados ``secundarios'', mientras que aquellos creados directamente en el decaimiento del $Z^0$, ``primarios''. La figura \ref{fig:PrimSecQuarks} es un ejemplo de diagrama para la creación de quarks primarios y secundarios. Es importante notar que los quarks secundarios pueden provenir de otros gluones emitidos por quarks primarios o secundarios.
+
+\begin{fmffile}{PrimarySecondary}
+
+\begin{figure}[h]
+  \centering
+%(along, up)
+    \vspace{1.5em}
+    \begin{fmfgraph*}(150,150)
+      \fmfleft{i1}
+      \fmfright{o1,o2,o3,o4}
+      \fmf{photon,label=$Z^0$}{i1,w1}
+      \fmf{quark,label=$\q$}{w1,w2}
+      \fmf{quark,label=$\q$}{w2,o1}
+      \fmf{plain}{o4,w3}
+      \fmf{quark,label=$\qbar$}{w3,w1}
+      \fmffreeze
+      \fmf{gluon,label=$\g$}{w4,w2}
+      \fmf{quark,label=$\q'$}{w4,o3}
+      \fmf{quark,label=$\qbar'$}{o2,w4}
+      \fmfv{lab=(4),lab.dist=0.005w}{o1}
+      \fmfv{lab=(3),lab.dist=0.005w}{o2}
+      \fmfv{lab=(2),lab.dist=0.005w}{o3}
+      \fmfv{lab=(1),lab.dist=0.005w}{o4}
+    \end{fmfgraph*}
+    \vspace{1.5em}
+\caption[Quarks primarios y secundarios.]{Par de quarks primarios (1,4) y un ejemplo de secundarios (2,3).}
+\label{fig:PrimSecQuarks}
+\end{figure}
+\end{fmffile}
+
+
+\subsection{La tasa $\g_{\b\bbar}$}
+
+La tasa de ramificación de un gluón emitido en un par $\b\bbar$ en los decaimientos hadrónicos del $Z^0$ ha sido medido (ver \cite{Abreu:1997nf},  \cite{Barate:1998vs}, \cite{Abe:1999qg}, \cite{Abreu:1999qh} y \cite{Abbiendi:2000zt}). Luego la cantidad
+
+\begin{equation}
+\g_{\b\bbar}=\frac{\Gamma(Z^0\to\q\qbar\g,\g\to\b\bbar)}{\Gamma(Z^0\to\mbox{hadrons})}
+\end{equation}
+es de interés particular.
+
+El análisis realizado acá es simple. Mirando únicamente a los decaimientos hadrónicos del $Z^0$, tenemos que contar cuántos quarks bottom secundarios fueron creados y dividir por el número de eventos. Este es un buen escenario para probar las ocho opciones propuestas en \ref{subsubsec:PythiaAlg}. 
+
+\subsection{Etiquetado de mesones $\D^{*\pm}$}
+
+Después del proceso duro y durante la evolución de la lluvia de partones, los quarks y gluones alcanzan energías en las cuales el confinamiento es dominante. Esta transición a la creación de hadrones es conocida como \textit{hadronización}. Algunos de los mesones observados contienen quarks pesados.
+
+En particular, existen estudios y mediciones de quarks charm producidos en decaimientos de $Z^0$\cite{Barate:1999bg}. Usando \textsc{Pythia}, vamos a estudiar el espectro de la fracción de energía $X_E=E/E_{\mbox{rayo}}$ de los mesones $\D^{*+}$ y $\D^{*-}$ (que consisten en $\cbar\d$ y $\c\dbar$, respectivamente), donde $E$ es la energía del mesón. Los mesones $\D^{*\pm}$ son estados excitados de los $\D^{\pm}$, de modo que los primeros usualmente decaen en los segundos. Los mesones $\D$ al final decaen débilmente. Es posible trazar esta cadena de decaimientos y reconstruir los $\D^{*\pm}$ a partir de datos experimentales.
+
+Al trazar los orígenes de los quarks charm de los mesones en cuestión en el récord del evento, se puede distinguir entre producción primaria y secundaria. La idea es seguir el contenido de charm hasta la ramificación original que lo produjo y clasificarlo. Entonces, es posible hacer coincidir cada hadrón con charm, con su respectivo (anti)quark charm antes de la hadronización. Esta clasificación entonces decidirá si el mesón es primario o secundario.
+
+Además, los mesones $\D$ pueden también provenir de un decaimiento débil de un mesón $\B$ (bottom). Este mecanismo no es discutido acá, pero el aspecto fundamental de este proceso es que el quark bottom en el mesón $\B$ emite un bosón $W$ virtual y se convierte en un charm, formando entonces un $\D^*$. Nuestros mesones charm entonces pueden ser clasificados como provenientes de quarks charm o bottom primarios o secundarios. Obviamente, la producción de quarks secundarios en la simulación se verá afectada por la tasa de producción $\g\to\Q\Qbar$.
+
+\section{Colisiones hadrónicas}
+
+Las colisiones de hadrones (usualmente protones con (anti)protones) en lugar de leptones introduce más complicaciones al análisis. A diferencia de los electrones y positrones, los hadrones no son partículas puntuales. Los partones de los hadrones que entran a la colisión conllevan a un evento con múltiples interacciones. La subcolisión más violenta (con el $\Q^2$ más grande) es clasificada como el evento duro, mientras que el efecto del resto de las interacciones es tomado en cuenta como MPI (interacciones multi-partónicas). Además, las interacciones de color de los hadrones de entrada están relacionadas con las ISR y las FSR. 
+
+
+Luego, el momentum total de los hadrones es ditribuído entre los partones, una distribución que en principio no es conocida. El modelado propuesto para la distribución de momentum de los partones son las llamadas Funciones de Distribución Partónicas (PDFs, por su sigla en inglés), definidas como la probabilidad de encontrar un partón $i$ con fracción de momentum $x$ dentro de un hadron inicial (que entra en la colisión) para una escala de energía específica $Q$: $f_i(x,Q^2)$. La sección eficaz de un proceso que involucra a dos hadrones iniciales es entonces:
+
+\begin{equation}
+\sigma = \sum_{a,b} \int \d x_1 f_a(x_1,Q^2) \int \d x_2 f_b(x_2,Q^2) \hat{\sigma} (\hat{s}=x_1x_2s,Q^2), 
+\end{equation}
+donde $\hat{\sigma}$ es la sección eficaz constituyente, que corresponde al subproceso en el cual $a$ y $b$ son los partones iniciales. La variable $s$ en este caso es la energía del centro de momentum al cuadrado. Aún más, el cálculo de $\hat{\sigma}$ en sí puede incluir más integraciones. Esta sección eficaz total también integra sobre las fracciones de momentum y suma sobre todas las posibles interacciones partónicas.
+
+Para hacer un estudio desacoplado de la dependencia en momentum introducida por las PDFs, es conveniente tratar con observables invariantes a boosts en el eje de colisiones $z$, es decir, que no dependan de los valores individuales de $x_1$ y $x_2$.
+
+\subsection{Mecanismos de producción de sabores pesados}
+
+Una clasificación de cómo los quarks pesados ($\Q$) interactúan en una colisión hadrónica puede ser llevada a cabo tomando en cuenta el papel que estos juegan en el proceso duro \cite{Norrbin:2000zc}.
+
+\paragraph{Creación de un par (PC)} Ocurre cuando un par de quarks pesados es creado en el poroceso duro. Para conservar el momentum, en primera aproximación los quarks deben ser creados en direcciones opuestas en el eje azimutal. Las correcciones a esta aproximación se deben a las desviaciones que provienen de la emisión en la lluvia de partones.
+
+\paragraph{Excitación de sabor (FE)} Sucede cuando un (anti)quark pesado es producido y entra en el proceso duro. La interacción es usualmente mediada por intercambio de gluón con otro gluón o quark. Las direcciones de $\Q$ y $\Qbar$ están menos fuertemente anticorrelacionadas que en el caso de PC.
+
+\paragraph{Ramificación de un gluón (GS)} Aquí, la ramificación $\g\to\Q\Qbar$ ocurre después de la colisión dura, así que el par pesado es emitido sin participar en el proceso duro, usualmente con un ángulo de separación bajo.
+
+\vspace{1em}
+
+La figura \ref{fig:ProdMech} muestra ejemplos de PC, FE y GS.
+
+\begin{fmffile}{Production}
+
+\begin{figure}[h]
+%(along, up)
+    \begin{fmfgraph*}(130,130)
+      \fmfleft{i1,i2}
+      \fmfright{o1,o2}
+      \fmf{gluon}{i1,w1}
+      \fmf{gluon}{w1,i2}
+      \fmf{gluon}{w2,w1}
+      \fmf{quark,label=$\Qbar$}{o2,w2}
+      \fmf{quark,label=$\Q$}{w2,o1}
+    \end{fmfgraph*} 
+    \hspace{1.5em}
+    \begin{fmfgraph*}(130,130)
+       \fmfleft{i1,i2,i3,i4}
+       \fmfright{o1,o2,o3,o4}
+       \fmf{gluon}{i2,v1}
+       \fmf{quark,label=$\Q$}{v1,v2}
+       \fmf{plain}{v2,v3}
+       \fmf{quark,label=$\Q$}{v3,o2}
+       
+       \fmf{plain}{i4,v4}
+       \fmf{quark,label=$\q$}{v4,v5}
+       \fmf{plain}{v5,v6}
+       \fmf{quark,label=$\q$}{v6,o4}
+       
+       \fmf{gluon}{v2,v5}
+       \fmffreeze
+       \fmf{quark,label=$\Qbar$}{o1,v1}
+    \end{fmfgraph*}
+    \hspace{1.5em}
+    \begin{fmfgraph*}(130,130)
+      \fmfleft{i1,i2}
+      \fmfright{o1,o2,o3,o4}
+      \fmf{gluon}{i1,v1}
+      \fmf{gluon}{v1,i2}
+      \fmf{gluon}{v2,v1}
+      \fmf{gluon}{v2,v3}
+      \fmf{quark,label=$\Qbar$}{o1,v3}
+      \fmf{quark,label=$\Q$}{v3,o2}
+      \fmf{phantom}{v2,v4,o4}
+      \fmffreeze
+      \fmf{gluon}{o4,v2}
+    \end{fmfgraph*} \\
+\caption[Mecanismos de producción de sabores pesados.]{De izquierda a derecha, ejemplos de: Creación de un par, Excitación de sabor y Ramificación de un gluón.} 
+\label{fig:ProdMech}
+\end{figure}
+
+\end{fmffile}
+
+Un caso especial interesante sucede cuando una ramificación de un gluón de la radiación inicial (ISR) conlleva a un par de quarks pesados que terminan sin estar involucrados en el proceso duro. El diagrama para esta situación es mostrado en la figura \ref{fig:GluFlav}. Este caso es menos común que los mencionados anteriormente y no influye significativamente en los estudios que siguen.
+
+\begin{fmffile}{FlavourGluon}
+
+\begin{figure}[!h]
+%(along, up)
+  \centering
+    \begin{fmfgraph*}(140,120)
+      \fmfleft{i1,i2,i3,i4,i5}
+      \fmfright{o1,o2,o3,o4,o5}
+      \fmf{gluon}{i2,v1}
+      \fmf{quark,label=$\Q$}{v1,v2}
+      \fmf{gluon}{v2,v3}
+      \fmf{phantom}{v3,v4,v5,o3}
+      %\fmf{gluon}{v3,o3}
+      
+      \fmf{phantom}{v3,w1,w2,v8}
+      
+      \fmf{phantom}{i5,v6,v7,v8,v9,v10,o5}
+      
+      \fmffreeze
+      \fmf{quark,label=$\Qbar$}{o1,v1}
+      \fmf{quark,label=$\Q$}{v2,o2}
+      \fmf{gluon}{v3,o3}
+      \fmf{gluon}{i5,v8,o5}
+      \fmf{gluon}{v3,v8}
+    \end{fmfgraph*} 
+\caption[Ramificación de un gluón con carácter de Excitación de sabor.]{Mecanismo clasificado como Ramificación de un gluón, con carácter de Excitación de sabor.}
+\label{fig:GluFlav}
+\end{figure}
+
+\end{fmffile}
+
+Para analizar la producción de quarks bottom en colisionadores hadrónicos, estudiaremos observables relacionados con mesones $\B$. Generaremos eventos protón-protón a una energía típica del LHC ($E_{CM}=7000$ GeV), listamos los mesones bottom finales, es decir, los que decaen en objetos que no contienen bottom. Cada $\B$ de la lista es trazado hasta el primer mesón $\B$ (el creado en el primer paso luego de la hadronización). Luego, se identifican los quarks bottom que dieron origen a los mesones y, de acuerdo con la clasificación por mecanismos de producción de los quarks, se clasificarán también los mesones.
+
+Es importante tomar en cuenta la oscilación $\B-\Bbar$. No podemos asociar unívocamente un (anti)quark bottom con un (anti) mesón $\B$, debido a que los mesones neutrales $\B$ pueden convertirse en sus propias antipartículas. Como ejemplo de esta oscilación, tenemos el caso del mesón $\Bbar_s$, que se puede oscilar al estado $\B_s$ y viceversa.
+
+Por razones prácticas, sólo los eventos que contienen un par $\b\bbar$ serán seleccionados para hacer la clasificación y los cálculos relacionados con los mesones bottom, de acuerdo con los mecanismos de producción (PC, FE y GS). Así, nos aseguramos de que sólo una ramificación $\g\to\b\bbar$ ocurrió en el evento, de modo que el registro del evento contenga únicamente dos partículas que correspondan al mismo mecanismo. Observables calculados a partir de eventos con más pares de bottoms serán clasificados como mezclados, a pesar de que cada par individualmente contenga información sobre su mecanismo de producción.
+
+A pesar de que no es usada acá, una estrategia más complicada para extraer información sobre los mecanismos de producción de los eventos con más pares de bottom. Una vez que la lista con todos los mesones $\B$ con sus respectivos quarks bottom es llenada, podemos aparear los mesones de muchas maneras, pero sólo una configuración apareará a cada mesón con su compañero, que proviene de la misma ramificación $\g\to\b\bbar$. En este caso, cada par puede ser clasificado por mecanismo de producción, mientras que las otras combinaciones mezclan quarks de diferentes ramificaciones.
+
+Estudiaremos los siguientes observables invariantes de Lorentz ante un boost en el eje $z$, para PC, FE and GS: separación angular azimutal entre los mesones ($\Delta\varphi$), su diferencia en rapidez ($\Delta y$), y su distancia $R^2$ deifinida como $(\Delta\varphi)^2+(\Delta y)^2$.

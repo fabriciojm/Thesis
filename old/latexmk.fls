@@ -1,0 +1,6 @@
+PWD /Users/fabricio/Tesis
+INPUT /usr/local/texlive/2014basic/texmf.cnf
+INPUT /usr/local/texlive/2014basic/texmf-dist/web2c/texmf.cnf
+INPUT /usr/local/texlive/2014basic/texmf-var/web2c/pdftex/pdflatex.fmt
+INPUT /usr/texbin/latexmk
+OUTPUT latexmk.log

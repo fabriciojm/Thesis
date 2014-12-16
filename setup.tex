@@ -1,0 +1,166 @@
+% external packages 
+\usepackage[utf8]{inputenc}
+
+% package for figures
+\usepackage{graphicx}
+\usepackage{caption}
+%\usepackage{subcaption}
+
+% combine citations into a range
+\usepackage{cite}
+
+% ulem implements \sout{} for overstriking text
+%\usepackage{ulem}
+
+%% define page size
+%\setlength{\textheight}{235mm}
+%\setlength{\topmargin}{6mm}
+%\setlength{\headheight}{0mm}
+%\setlength{\headsep}{0mm}
+%\setlength{\footskip}{15mm}
+%\setlength{\textwidth}{163mm}
+%\setlength{\oddsidemargin}{1mm}
+%\setlength{\evensidemargin}{1mm}
+
+% define math alphabets for roman and boldface, overline
+\newcommand{\ttt}[1]{\texttt{#1}}
+\newcommand{\tbf}[1]{\textbf{#1}}
+\newcommand{\mrm}[1]{\mathrm{#1}}
+\newcommand{\mbf}[1]{\mathbf{#1}}
+\newcommand{\br}[1]{\overline{#1}}
+
+% roman names for particles in math mode
+\renewcommand{\a}{{\mathrm a}}
+\renewcommand{\b}{{\mathrm b}}
+\renewcommand{\c}{{\mathrm c}}
+\renewcommand{\d}{{\mathrm d}}
+\newcommand{\e}{{\mathrm e}}
+\newcommand{\f}{{\mathrm f}}
+\newcommand{\g}{{\mathrm g}}
+\newcommand{\hrm}{{\mathrm h}}
+\newcommand{\lrm}{{\mathrm l}}
+\newcommand{\n}{{\mathrm n}}
+\newcommand{\p}{{\mathrm p}}
+\newcommand{\q}{{\mathrm q}}
+\newcommand{\s}{{\mathrm s}}
+\renewcommand{\t}{{\mathrm t}}
+\renewcommand{\u}{{\mathrm u}}
+\newcommand{\A}{{\mathrm A}}
+\newcommand{\B}{{\mathrm B}}
+\newcommand{\D}{{\mathrm D}}
+\newcommand{\F}{{\mathrm F}}
+\renewcommand{\H}{{\mathrm H}}
+\newcommand{\J}{{\mathrm J}}
+\newcommand{\K}{{\mathrm K}}
+\renewcommand{\L}{{\mathrm L}}
+\newcommand{\Q}{{\mathrm Q}}
+\newcommand{\R}{{\mathrm R}}
+\newcommand{\T}{{\mathrm T}}
+\newcommand{\W}{{\mathrm W}}
+\newcommand{\Z}{{\mathrm Z}}
+\newcommand{\bbar}{\overline{\mathrm b}}
+\newcommand{\cbar}{\overline{\mathrm c}}
+\newcommand{\dbar}{\overline{\mathrm d}}
+\newcommand{\fbar}{\overline{\mathrm f}}
+\newcommand{\pbar}{\overline{\mathrm p}}
+\newcommand{\qbar}{\overline{\mathrm q}}
+\newcommand{\rbar}{\overline{\mathrm{r}}}
+\newcommand{\sbar}{\overline{\mathrm s}}
+\newcommand{\tbar}{\overline{\mathrm t}}
+\newcommand{\ubar}{\overline{\mathrm u}}
+\newcommand{\Bbar}{\overline{\mathrm B}}
+\newcommand{\Fbar}{\overline{\mathrm F}}
+\newcommand{\Qbar}{\overline{\mathrm Q}}
+\newcommand{\ee}{\e^+\e^-}
+\newcommand{\ep}{\e\p}
+\newcommand{\pp}{\p\p}
+\newcommand{\ppbar}{\p\pbar}
+\newcommand{\gammaZ}{\gamma^* / \Z^0}
+\newcommand{\gast}{\gamma^*}
+\newcommand{\WZ}{{\W/\Z}}
+
+% susy particles
+\newcommand{\sq}{\tilde{\rm q}}
+\newcommand{\sqs}{\tilde{\rm q}^*}
+\newcommand{\tp}{\tilde{\rm t}}
+\newcommand{\tm}{\tilde{\rm t}^*}
+\newcommand{\sd}{\tilde{\rm d}}
+\newcommand{\su}{\tilde{\rm u}}
+\newcommand{\sch}{\tilde{\rm c}}
+\newcommand{\sst}{\tilde{\rm s}}
+\newcommand{\st}{\tilde{\rm t}}
+\newcommand{\sbo}{\tilde{\rm b}}
+\newcommand{\sbs}{\tilde{\rm b}^*}
+\newcommand{\se}{\tilde{\rm e}}
+\newcommand{\smu}{\tilde{\mu}}
+\newcommand{\stau}{\tilde{\tau}}
+\newcommand{\snu}{\tilde{\nu}}
+\newcommand{\sell}{\tilde{\ell}}
+\newcommand{\snue}{\tilde{\nu}_{e}}
+\newcommand{\snum}{\tilde{\nu}_{\mu}}
+\newcommand{\snut}{\tilde{\nu}_{\tau}}
+\newcommand{\glu}{\tilde{\rm g}}
+\newcommand{\chio}{\tilde{\chi}}
+\newcommand{\chip}{\tilde{\chi}^\pm}
+\newcommand{\chim}{\tilde{\chi}^\mp}
+\newcommand{\grav}{\tilde{\rm G}}
+\newcommand{\sg}{\tilde{\mathrm{g}}}
+\newcommand{\sqbar}{\overline{\tilde{\mathrm{q}}}}
+\newcommand{\stbar}{\overline{\tilde{\mathrm{t}}}}
+\newcommand{\schi}{\tilde{\chi}}
+
+% shorthands
+\newcommand{\as}{\alpha_{\mathrm{s}}}
+\newcommand{\aem}{\alpha_{\mathrm{em}}}
+\newcommand{\aw}{\alpha_{\mathrm{w}}}
+\newcommand{\aeff}{\alpha_{\mathrm{eff}}}
+\newcommand{\stw}{\sin^2 \! \theta_W}
+\newcommand{\ctw}{\cos^2 \! \theta_W}
+\newcommand{\mW}{m_{\mathrm{W}}}
+\newcommand{\mZ}{m_{\mathrm{Z}}}
+\newcommand{\ECM}{E_{\mathrm{cm}}}
+\newcommand{\shat}{\hat{s}}
+\newcommand{\that}{\hat{t}}
+\newcommand{\uhat}{\hat{u}}
+\newcommand{\xhat}{\hat{x}}
+\newcommand{\sigmahat}{\hat{\sigma}}
+\newcommand{\bp}{\mathbf{p}}
+\newcommand{\up}{\underline{p}}
+\newcommand{\maM}{\mathcal{M}}
+\newcommand{\boldbeta}{\mbox{\boldmath$\beta$}}
+\newcommand{\boldepsi}{\mbox{\boldmath$\epsilon$}}
+
+% pT shorthands
+\newcommand{\kT}{k_{\perp}}
+\newcommand{\mT}{m_{\perp}}
+\newcommand{\PT}[1]{\p_{\perp\mathrm{#1}}}
+\newcommand{\PTs}[1]{\p^2_{\perp\mathrm{#1}}}
+\newcommand{\pT}{p_{\perp}}
+\newcommand{\pTs}{p^2_{\perp}}
+\newcommand{\pTe}{\p_{\perp\mrm{evol}}}
+\newcommand{\pTse}{\p^2_{\perp\mrm{evol}}}
+\newcommand{\pTmin}{p_{\perp\mathrm{min}}}
+\newcommand{\pTsmin}{p^2_{\perp\mathrm{min}}}
+\newcommand{\pTmax}{p_{\perp\mathrm{max}}}
+\newcommand{\pTsmax}{p^2_{\perp\mathrm{max}}}
+\newcommand{\pTo}{p_{\perp 0}}
+\newcommand{\pTso}{p^2_{\perp 0}}
+\newcommand{\bpT}{\mathbf{p}_{\perp}}
+\newcommand{\pThat}{\widehat{p}_{\perp}}
+\newcommand{\pTsep}{p_{\perp\mathrm{sep}}}
+ 
+% new list environments to replace itemize and enumerate
+\newenvironment{Itemize}{\begin{list}{$\bullet$}%
+{\setlength{\topsep}{0.2mm}\setlength{\partopsep}{0.2mm}%
+\setlength{\itemsep}{0.2mm}\setlength{\parsep}{0.2mm}}}%
+{\end{list}}
+\newcounter{enumct}
+\newenvironment{Enumerate}{\begin{list}{\arabic{enumct}.}%
+{\usecounter{enumct}\setlength{\topsep}{0.2mm}%
+\setlength{\partopsep}{0.2mm}\setlength{\itemsep}{0.2mm}%
+\setlength{\parsep}{0.2mm}}}{\end{list}}
+
+% width of abstract
+\newlength{\abstwidth}
+\setlength{\abstwidth}{\textwidth}
+\addtolength{\abstwidth}{-25mm}

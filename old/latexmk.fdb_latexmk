@@ -1,0 +1,7 @@
+# Fdb version 3
+["pdflatex"] 1418225333 "/usr/texbin/latexmk" "latexmk.pdf" "latexmk" 1418225334
+  "/usr/texbin/latexmk" 1385078581 322892 2fd57b657ab7364629318b99e66c95e6 ""
+  "latexmk.aux" 0 -1 0 ""
+  (generated)
+  "latexmk.pdf"
+  "latexmk.log"
